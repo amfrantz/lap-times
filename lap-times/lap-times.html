@@ -1,0 +1,23 @@
+<head>
+  <title>Lap Times</title>
+</head>
+
+<body>
+<div class="container">
+  <header>
+    <h1>{{#with currentBoard}}{{track}} - {{car}}{{/with}}</h1>
+  </header>
+
+  <ol>
+    {{#each lapTimes}}
+    <li>{{user}} - {{time}}</li>
+    {{/each}}
+  </ol>
+
+  <form class="new-time">
+    <input type="text" name="driver" placeholder="driver name" />
+    <input type="text" name="time" placeholder="lap time" />
+    <button type="submit">add time</button>
+  </form>
+</div>
+</body>
