@@ -1,1 +1,61 @@
-/* CSS declarations go here */
+html {
+	font-size: 62.5%;
+}
+
+body {
+	font-size: 1.4rem;
+	padding: 10px 30px 20px 38px;
+}
+
+.container {
+	padding: 0 10px 0 25px;
+	position: relative;
+}
+
+.leaderBoard-title {
+	-webkit-transform: rotate(90deg);
+	-ms-transform: rotate(90deg);
+	-o-transform: rotate(90deg);
+	transform: rotate(90deg);
+
+	-webkit-transform-origin: left top;
+	-moz-transform-origin: left top;
+	-ms-transform-origin: left top;
+	-o-transform-origin: left top;
+	transform-origin: left top;
+
+	font-size: 4.5rem;
+	left: 0;
+	margin: 0;
+	position: absolute;
+	text-transform: uppercase;
+	top: 0;
+}
+.leaderBoard-title-track {
+	font-weight: 600
+}
+.leaderBoard-title-divider {
+	color: rgba(0, 0, 0, 0.15);
+	letter-spacing: -6px;
+	font-weight: 100;
+}
+.leaderBoard-title-car {
+	font-weight: 300;
+}
+
+.leaderBoard-times {
+	counter-reset: times-counter;
+}
+.leaderBoard-times dt {
+	font-size: 2.4rem;
+}
+.leaderBoard-times dt:first-child {
+	font-size: 3.4rem;
+}
+.leaderBoard-times dt:before {
+	content: counter(times-counter, decimal-leading-zero);
+	counter-increment: times-counter;
+	text-align: left;
+    width: 25px;
+    display: inline-block;
+}

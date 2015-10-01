@@ -1,18 +1,23 @@
 <head>
   <title>Lap Times</title>
+
+  <link href="//cdn.muicss.com/mui-0.1.23/css/mui.min.css" rel="stylesheet" type="text/css" />
+  <script src="//cdn.muicss.com/mui-0.1.23/js/mui.min.js"></script>
 </head>
 
 <body>
 <div class="container">
-  <header>
-    <h1>{{#with currentBoard}}{{track}} - {{car}}{{/with}}</h1>
-  </header>
+    <h1 class="leaderBoard-title">
+      <span class="leaderBoard-title-track">Nurburgring</span>
+      <span class="leaderBoard-title-divider">//</span>
+      <span class="leaderBoard-title-car">E30 M3</span>
+      <!-- {{#with currentBoard}}{{track}} - {{car}}{{/with}} --></h1>
 
-  <ol>
+  <dl class="leaderBoard-times">
     {{#each lapTimes}}
-    <li>{{user}} - {{time}}</li>
+      <dt>{{user}} - {{time}}</dt>
     {{/each}}
-  </ol>
+  </dl>
 
   <form class="new-time">
     <input type="text" name="driver" placeholder="driver name" />
