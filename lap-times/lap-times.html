@@ -14,10 +14,13 @@
     {{/each}}
   </ol>
 
+  {{> loginButtons}}
+
+  {{#if currentUser}}
   <form class="new-time">
-    <input type="text" name="driver" placeholder="driver name" />
     <input type="text" name="time" placeholder="lap time" />
     <button type="submit">add time</button>
   </form>
+  {{/if}}
 </div>
 </body>

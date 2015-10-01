@@ -9,7 +9,8 @@ if (Meteor.isClient) {
     },
 
     lapTimes: function () {
-      var cursor = LapTimes.find({}, {sort: {time: 1}});
+      var leaderboard = LeaderBoards.findOne({}, {sort: {createdDtm: -1}});
+      var cursor = LapTimes.find({leaderboardId: leaderboard.id}, {sort: {time: 1}});
       var drivers = [];
       var result = [];
       cursor.forEach(function(i) {
@@ -27,22 +28,25 @@ if (Meteor.isClient) {
       // Prevent default browser form submit
       event.preventDefault();
 
-      // Get value from form element
-      var driver = event.target.driver.value;
+      var leaderboard = LeaderBoards.findOne({}, {sort: {createdDtm: -1}});
       var time = event.target.time.value;
 
       // Insert a time into the collection
       LapTimes.insert({
-        leaderboardId: 1,
-        user: driver,
+        leaderboardId: leaderboard.id,
+        owner: Meteor.userId(),
+        user: Meteor.user().username,
         time: time,
         createdAt: new Date() // current time
       });
 
       // Clear form
-      event.target.driver.value = "";
       event.target.time.value = "";
     }
+  });
+
+  Accounts.ui.config({
+    passwordSignupFields: "USERNAME_ONLY"
   });
 }
 
