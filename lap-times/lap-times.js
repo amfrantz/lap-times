@@ -44,7 +44,7 @@ if (Meteor.isClient) {
 
       var leaderboard = Session.get("leaderboard");
       var time = event.target.time.value;
-      if (/^([0-9]?[0-9]):([0-5][0-9]).([0-9])$/.test(time)) {
+      if (/[0-9]?[0-9]:[0-5][0-9]\.[0-9]/.test(time)) {
         var timeMs = timeToMs(time);
         LapTimes.insert({
           leaderboard_id: leaderboard,
