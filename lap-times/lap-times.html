@@ -8,21 +8,26 @@
 <body>
 <div class="container">
     <h1 class="leaderBoard-title">
-      <span class="leaderBoard-title-track">Nurburgring</span>
-      <span class="leaderBoard-title-divider">//</span>
-      <span class="leaderBoard-title-car">E30 M3</span>
-      <!-- {{#with currentBoard}}{{track}} - {{car}}{{/with}} --></h1>
+      {{#with currentBoard}}
+        <span class="leaderBoard-title-car">{{car}}</span>
+        <span class="leaderBoard-title-divider">//</span>
+        <span class="leaderBoard-title-track">{{track}}</span>
+      {{/with }}
+    </h1>
 
   <dl class="leaderBoard-times">
     {{#each lapTimes}}
-      <dt>{{user}} - {{time}}</dt>
+      <dt>{{driver}} - {{time}}</dt>
     {{/each}}
   </dl>
 
+  {{> loginButtons}}
+
+  {{#if currentUser}}
   <form class="new-time">
-    <input type="text" name="driver" placeholder="driver name" />
     <input type="text" name="time" placeholder="lap time" />
     <button type="submit">add time</button>
   </form>
+  {{/if}}
 </div>
 </body>
