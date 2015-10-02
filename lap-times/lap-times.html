@@ -6,28 +6,32 @@
 </head>
 
 <body>
-<div class="container">
-    <h1 class="leaderBoard-title">
-      {{#with currentBoard}}
-        <span class="leaderBoard-title-car">{{car}}</span>
-        <span class="leaderBoard-title-divider">//</span>
-        <span class="leaderBoard-title-track">{{track}}</span>
-      {{/with }}
-    </h1>
+    <div class="container">
+        <h1 class="leaderBoard-title">
+            {{#with currentBoard}}
+                <span class="leaderBoard-title-car">{{car}}</span>
+                <span class="leaderBoard-title-divider">//</span>
+                <span class="leaderBoard-title-track">{{track}}</span>
+            {{/with }}
+        </h1>
 
-  <dl class="leaderBoard-times">
-    {{#each lapTimes}}
-      <dt>{{driver}} - {{time}}</dt>
-    {{/each}}
-  </dl>
+        <div class="user-controls">
+            {{> loginButtons}}
+        </div>
 
-  {{> loginButtons}}
+        <div class="add-time">
+            {{#if currentUser}}
+                <form class="new-time mui-form-inline">
+                    <input type="text" name="time" placeholder="enter time" class="mui-form-control" />
+                    <button type="submit" data-mui-size="small" class="mui-btn">Add</button>
+                </form>
+            {{/if}}
+        </div>
 
-  {{#if currentUser}}
-  <form class="new-time">
-    <input type="text" name="time" placeholder="lap time" />
-    <button type="submit">add time</button>
-  </form>
-  {{/if}}
-</div>
+        <dl class="leaderBoard-times">
+            {{#each lapTimes}}
+                <dt>{{driver}} - {{time}}</dt>
+            {{/each}}
+        </dl>
+    </div>
 </body>

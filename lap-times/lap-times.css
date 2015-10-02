@@ -12,6 +12,22 @@ body {
 	position: relative;
 }
 
+.user-controls {
+	float: right;
+	padding-top: 10px;
+}
+
+#login-dropdown-list {
+	left: auto;
+	right: -1px;
+}
+
+#login-buttons a.login-link-text {
+	text-decoration: none;
+    font-weight: 400;
+    font-size: 1.6rem;
+}
+
 .leaderBoard-title {
 	-webkit-transform: rotate(90deg);
 	-ms-transform: rotate(90deg);
@@ -30,29 +46,37 @@ body {
 	position: absolute;
 	text-transform: uppercase;
 	top: 0;
+	white-space: nowrap;
 }
+
 .leaderBoard-title-car {
 	font-weight: 600
 }
+
 .leaderBoard-title-divider {
 	color: rgba(0, 0, 0, 0.15);
-	letter-spacing: -6px;
+	letter-spacing: -4px;
 	font-weight: 100;
 }
+
 .leaderBoard-title-track {
 	font-weight: 300;
 }
 
 .leaderBoard-times {
 	counter-reset: times-counter;
+	margin-top: 20px;
 }
+
 .leaderBoard-times dt {
-	font-size: 2.4rem;
+	font-size: 2.8rem;
 }
+
 .leaderBoard-times dt:first-child {
-	font-size: 3.4rem;
+	font-size: 3.8rem;
 	font-weight: 500;
 }
+
 .leaderBoard-times dt:before {
 	content: counter(times-counter, decimal-leading-zero);
 	counter-increment: times-counter;

@@ -9,19 +9,23 @@ if (Meteor.isClient) {
 
     lapTimes: function () {
       var leaderboard = getCurrentLeaderboard();
-      var cursor = LapTimes.find({leaderboard_id: leaderboard._id}, {sort: {time: 1}});
       var drivers = [];
       var result = [];
-      cursor.forEach(function(i) {
-        if (drivers.indexOf(i.user) == -1) {
-          result.push(
-              {
-                "driver": i.driver,
-                "time": msToTime(i.time)
-              });
-          drivers.push(i.user);
-        }
-      });
+
+      if (leaderboard) {
+        var cursor = LapTimes.find({leaderboard_id: leaderboard._id}, {sort: {time: 1}});
+        cursor.forEach(function(i) {
+          if (drivers.indexOf(i.owner) == -1) {
+            result.push(
+                {
+                  "driver": i.driver,
+                  "time": msToTime(i.time)
+                });
+            drivers.push(i.owner);
+          }
+        });
+      }
+
       return result;
     }
   });
