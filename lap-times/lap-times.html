@@ -1,18 +1,25 @@
 <head>
   <title>Lap Times</title>
+
+  <link href="//cdn.muicss.com/mui-0.1.23/css/mui.min.css" rel="stylesheet" type="text/css" />
+  <script src="//cdn.muicss.com/mui-0.1.23/js/mui.min.js"></script>
 </head>
 
 <body>
 <div class="container">
-  <header>
-    <h1>{{#with leaderboard}}{{track}} - {{car}}{{/with}}</h1>
-  </header>
+    <h1 class="leaderBoard-title">
+      {{#with leaderboard}}
+        <span class="leaderBoard-title-car">{{car}}</span>
+        <span class="leaderBoard-title-divider">//</span>
+        <span class="leaderBoard-title-track">{{track}}</span>
+      {{/with }}
+    </h1>
 
-  <ol>
+  <dl class="leaderBoard-times">
     {{#each lapTimes}}
-    <li>{{driver}} - {{time}}</li>
+      <dt>{{driver}} - {{time}}</dt>
     {{/each}}
-  </ol>
+  </dl>
 
   {{> loginButtons}}
 
