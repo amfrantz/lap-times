@@ -8,7 +8,7 @@
 <body>
     <div class="container">
         <h1 class="leaderBoard-title">
-            {{#with currentBoard}}
+            {{#with leaderboard}}
                 <span class="leaderBoard-title-car">{{car}}</span>
                 <span class="leaderBoard-title-divider">//</span>
                 <span class="leaderBoard-title-track">{{track}}</span>
@@ -33,5 +33,11 @@
                 <dt>{{driver}} - {{time}}</dt>
             {{/each}}
         </dl>
+
+        <br/>
+        
+        {{#each leaderboards}}
+            <a id="{{_id}}" class="leaderboard">{{track}} - {{car}}</a><br/>
+        {{/each}}
     </div>
 </body>

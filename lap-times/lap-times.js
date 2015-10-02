@@ -3,17 +3,21 @@ LapTimes = new Mongo.Collection("lap_times");
 
 if (Meteor.isClient) {
   Template.body.helpers({
-    currentBoard: function() {
-      return getCurrentLeaderboard();
+    leaderboard: function() {
+      return getLeaderboard();
+    },
+
+    leaderboards: function() {
+      return LeaderBoards.find({}, {sort: {created_dtm : -1}});
     },
 
     lapTimes: function () {
-      var leaderboard = getCurrentLeaderboard();
+      var leaderboard = Session.get("leaderboard");
       var drivers = [];
       var result = [];
 
       if (leaderboard) {
-        var cursor = LapTimes.find({leaderboard_id: leaderboard._id}, {sort: {time: 1}});
+        var cursor = LapTimes.find({leaderboard_id: leaderboard}, {sort: {time: 1}});
         cursor.forEach(function(i) {
           if (drivers.indexOf(i.owner) == -1) {
             result.push(
@@ -34,12 +38,12 @@ if (Meteor.isClient) {
     "submit .new-time": function (event) {
       event.preventDefault();
 
-      var leaderboard = getCurrentLeaderboard();
+      var leaderboard = Session.get("leaderboard");
       var time = event.target.time.value;
       if (/^([0-9]?[0-9]):([0-5][0-9]).([0-9])$/.test(time)) {
         var timeMs = timeToMs(time);
         LapTimes.insert({
-          leaderboard_id: leaderboard._id,
+          leaderboard_id: leaderboard,
           owner: Meteor.userId(),
           driver: Meteor.user().username,
           time: Number(timeMs),
@@ -50,6 +54,10 @@ if (Meteor.isClient) {
       } else {
         alert ('Nice try. Lap times must be formatted as follows: 00:00.0');
       }
+    },
+    "click .leaderboard": function (event) {
+      event.preventDefault();
+      Session.set("leaderboard", Number(event.target.id));
     }
   });
 
@@ -57,8 +65,14 @@ if (Meteor.isClient) {
     passwordSignupFields: "USERNAME_ONLY"
   });
 
-  function getCurrentLeaderboard() {
-    return LeaderBoards.findOne({}, {sort: {created_dtm: -1}});
+  function getLeaderboard() {
+    if (Session.get("leaderboard")) {
+      return LeaderBoards.findOne({_id: Session.get("leaderboard")});
+    } else {
+      var latest = LeaderBoards.findOne({}, {sort: {created_dtm: -1}});
+      Session.set("leaderboard", latest._id);
+      return latest;
+    }
   }
 
   function timeToMs(time) {
