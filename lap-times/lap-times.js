@@ -121,8 +121,6 @@ if (Meteor.isClient) {
     var overallBestMs = overallBest ? overallBest.time : 9999999;
     var message3 = timeMs < overallBestMs ? " And it's also a new all-time record!" : "";
 
-    alert(color + " : " +message1 + message2 + message3);
-
     var xhttp = new XMLHttpRequest();
     xhttp.open("POST", "https://api.hipchat.com/v2/room/Racing/notification?auth_token=Mk8MPiX1IuDD9ujFlIWkN2F12dXHflpIR1Nx1Koj", true);
     xhttp.setRequestHeader("Content-type", "application/json");
