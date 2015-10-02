@@ -15,9 +15,11 @@
             {{/with }}
         </h1>
 
-        <div class="user-controls">
-            {{> loginButtons}}
-        </div>
+        {{#unless isViewOnly}}
+            <div class="user-controls">
+                {{> loginButtons}}
+            </div>
+        {{/unless}}
 
         <div class="add-time">
             {{#if currentUser}}
@@ -35,7 +37,7 @@
         </dl>
 
         <br/>
-        
+
         {{#each leaderboards}}
             <a id="{{_id}}" class="leaderboard">{{track}} - {{car}}</a><br/>
         {{/each}}

@@ -16,19 +16,25 @@ if (Meteor.isClient) {
       var drivers = [];
       var result = [];
 
-      var cursor = LapTimes.find({leaderboard_id: leaderboard}, {sort: {time: 1}});
-      cursor.forEach(function(i) {
-        if (drivers.indexOf(i.owner) == -1) {
-          result.push(
-              {
-                "driver": i.driver,
-                "time": msToTime(i.time)
-              });
-          drivers.push(i.owner);
-        }
-      });
+      if (leaderboard) {
+        var cursor = LapTimes.find({leaderboard_id: leaderboard}, {sort: {time: 1}});
+        cursor.forEach(function(i) {
+          if (drivers.indexOf(i.owner) == -1) {
+            result.push(
+                {
+                  "driver": i.driver,
+                  "time": msToTime(i.time)
+                });
+            drivers.push(i.owner);
+          }
+        });
+      }
 
       return result;
+    },
+
+    isViewOnly: function () {
+      return (location.search.split('?')[1].split('=').indexOf('viewOnly') !== -1);
     }
   });
 
@@ -48,6 +54,9 @@ if (Meteor.isClient) {
           created_dtm: new Date()
         });
         event.target.time.value = "";
+
+        // auto logout - if ever wanted
+        // localStorage.removeItem('Meteor.loginToken');
 
       } else {
         alert ('Nice try. Lap times must be formatted as follows: 00:00.0');
