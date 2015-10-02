@@ -16,25 +16,26 @@ if (Meteor.isClient) {
       var drivers = [];
       var result = [];
 
-      if (leaderboard) {
-        var cursor = LapTimes.find({leaderboard_id: leaderboard}, {sort: {time: 1}});
-        cursor.forEach(function(i) {
-          if (drivers.indexOf(i.owner) == -1) {
-            result.push(
-                {
-                  "driver": i.driver,
-                  "time": msToTime(i.time)
-                });
-            drivers.push(i.owner);
-          }
-        });
-      }
+      var cursor = LapTimes.find({leaderboard_id: leaderboard}, {sort: {time: 1}});
+      cursor.forEach(function(i) {
+        if (drivers.indexOf(i.owner) == -1) {
+          result.push(
+              {
+                "driver": i.driver,
+                "time": msToTime(i.time)
+              });
+          drivers.push(i.owner);
+        }
+      });
 
       return result;
     },
 
     isViewOnly: function () {
-      return (location.search.split('?')[1].split('=').indexOf('viewOnly') !== -1);
+      var params = location.search.split('?')[1];
+      if (params) {
+        return (params.split('=').indexOf('viewOnly') !== -1);
+      }
     }
   });
 
