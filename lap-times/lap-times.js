@@ -47,6 +47,9 @@ if (Meteor.isClient) {
       var time = event.target.time.value;
       if (/^[0-9]?[0-9]:[0-5][0-9]\.[0-9]$/.test(time)) {
         var timeMs = timeToMs(time);
+
+        notifyHipChat(leaderboard, time, timeMs);
+
         LapTimes.insert({
           leaderboard_id: leaderboard,
           owner: Meteor.userId(),
@@ -100,5 +103,29 @@ if (Meteor.isClient) {
     seconds = (seconds < 10) ? "0" + seconds : seconds;
 
     return minutes + ":" + seconds + "." + milliseconds;
+  }
+
+  function notifyHipChat(leaderboard, time, timeMs) {
+    var driver = Meteor.user().username;
+    var personalBest = LapTimes.findOne({driver: driver, leaderboard_id: leaderboard}, {sort: {time: 1}});
+    var personalBestTime = personalBest ? personalBest.time : 9999999;
+    var faster = timeMs < personalBestTime;
+    var overallBest = LapTimes.findOne({leaderboard_id: leaderboard}, {sort: {time: 1}});
+    var overallBestTime = overallBest ? overallBest.time : 9999999;
+    var fastest = timeMs < overallBestTime;
+    var color = faster ? "green" : "red";
+    var message1 = driver + " has completed a lap in " + time + ".";
+    var message2 = faster ? " Nice work!" : " Better luck next time.";
+    var message3 = fastest ? " That's a new record!!" : "";
+
+    var xhttp = new XMLHttpRequest();
+    xhttp.open("POST", "https://api.hipchat.com/v2/room/Racing/notification?auth_token=Mk8MPiX1IuDD9ujFlIWkN2F12dXHflpIR1Nx1Koj", true);
+    xhttp.setRequestHeader("Content-type", "application/json");
+    xhttp.send(JSON.stringify({
+      "color": color,
+      "message": message1 + message2 + message3,
+      "notify": true,
+      "message_format": "text"
+    }));
   }
 }
