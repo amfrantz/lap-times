@@ -11,25 +11,7 @@ if (Meteor.isClient) {
       return LeaderBoards.find({}, {sort: {created_dtm : -1}});
     },
 
-    lapTimes: function () {
-      var leaderboard = Session.get("leaderboard");
-      var drivers = [];
-      var result = [];
-
-      var cursor = LapTimes.find({leaderboard_id: leaderboard}, {sort: {time: 1}});
-      cursor.forEach(function(i) {
-        if (drivers.indexOf(i.owner) == -1) {
-          result.push(
-              {
-                "driver": i.driver,
-                "time": msToTime(i.time)
-              });
-          drivers.push(i.owner);
-        }
-      });
-
-      return result;
-    },
+    lapTimes: getLapTimes,
 
     isViewOnly: function () {
       var params = location.search.split('?')[1];
@@ -86,6 +68,27 @@ if (Meteor.isClient) {
     }
   }
 
+  function getLapTimes () {
+    var leaderboard = Session.get("leaderboard");
+    var drivers = [];
+    var result = [];
+
+    var cursor = LapTimes.find({leaderboard_id: leaderboard}, {sort: {time: 1}});
+    cursor.forEach(function(i) {
+      if (drivers.indexOf(i.owner) == -1) {
+        result.push(
+            {
+              "driver": i.driver,
+              "time": msToTime(i.time),
+              "timeMs": i.time
+            });
+        drivers.push(i.owner);
+      }
+    });
+
+    return result;
+  }
+
   function timeToMs(time) {
     var minutes = Number(time.split(':')[0]);
     var seconds = Number(time.split(':')[1].split('.')[0]);
@@ -105,28 +108,42 @@ if (Meteor.isClient) {
     return minutes + ":" + seconds + "." + milliseconds;
   }
 
+  function secondsDiff(ms1, ms2) {
+    return Math.abs((ms1 - ms2) / 1000);
+  }
+
   function notifyHipChat(leaderboard, time, timeMs) {
     var driver = Meteor.user().username;
     var personalBest = LapTimes.findOne({driver: driver, leaderboard_id: leaderboard}, {sort: {time: 1}});
     var personalBestMs = personalBest ? personalBest.time : 9999999;
     var faster = timeMs < personalBestMs;
-    var diff = Math.abs((timeMs - personalBestMs) / 1000);
+    var diff = secondsDiff(timeMs, personalBestMs);
     var close = diff * 1000 / personalBestMs <= .01;
 
     var color = faster ? "green" : close ? "yellow" : "red";
-    var message1 = driver + " has completed a lap in " + time + ".";
-    var message2 = faster ? " Nice work! That's a " + diff + " second improvement!" : close ? " Not too shabby." : " Better luck next time.";
+    var message1 = driver + " has completed a lap in " + time;
+
+    var message2 = "";
+    var lapTimes = getLapTimes();
+    lapTimes.forEach(function (lapTime) {
+      if (timeMs < lapTime.timeMs && driver !== lapTime.driver && !message2) {
+        message2 = ", beating " + lapTime.driver + " by " + secondsDiff(lapTime.timeMs, timeMs) + " seconds!";
+      }
+    });
+    message2 = message2 || ".";
+
+    var message3 = personalBest ? faster ? " Nice work! That's a " + diff + " second improvement!" : close ? " Not too shabby." : " Better luck next time." : "";
 
     var overallBest = LapTimes.findOne({leaderboard_id: leaderboard}, {sort: {time: 1}});
     var overallBestMs = overallBest ? overallBest.time : 9999999;
-    var message3 = timeMs < overallBestMs ? " And it's also a new all-time record!" : "";
+    var message4 = timeMs < overallBestMs ? " And it's also a new all-time record!" : "";
 
     var xhttp = new XMLHttpRequest();
     xhttp.open("POST", "https://api.hipchat.com/v2/room/Racing/notification?auth_token=Mk8MPiX1IuDD9ujFlIWkN2F12dXHflpIR1Nx1Koj", true);
     xhttp.setRequestHeader("Content-type", "application/json");
     xhttp.send(JSON.stringify({
       "color": color,
-      "message": message1 + message2 + message3,
+      "message": message1 + message2 + message3 + message4,
       "notify": true,
       "message_format": "text"
     }));
