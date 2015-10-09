@@ -11,7 +11,9 @@ if (Meteor.isClient) {
       return LeaderBoards.find({}, {sort: {created_dtm : -1}});
     },
 
-    lapTimes: getLapTimes,
+    lapTimes: function() {
+      return getLapTimes();
+    },
 
     isViewOnly: function () {
       var params = location.search.split('?')[1];
@@ -68,7 +70,7 @@ if (Meteor.isClient) {
     }
   }
 
-  function getLapTimes () {
+  function getLapTimes() {
     var leaderboard = Session.get("leaderboard");
     var drivers = [];
     var result = [];
@@ -115,37 +117,55 @@ if (Meteor.isClient) {
   function notifyHipChat(leaderboard, time, timeMs) {
     var driver = Meteor.user().username;
     var personalBest = LapTimes.findOne({driver: driver, leaderboard_id: leaderboard}, {sort: {time: 1}});
-    var personalBestMs = personalBest ? personalBest.time : 9999999;
-    var faster = timeMs < personalBestMs;
+    var personalBestMs = personalBest ? personalBest.time : 0;
+    var first = personalBestMs == 0;
+    var faster = !first && timeMs < personalBestMs;
     var diff = secondsDiff(timeMs, personalBestMs);
     var close = diff * 1000 / personalBestMs <= .01;
 
-    var color = faster ? "green" : close ? "yellow" : "red";
-    var message1 = driver + " has completed a lap in " + time;
+    var color = first || faster ? "green" : close ? "yellow" : "red";
+    var line1 = driver + " has posted a time of " + time;
 
-    var message2 = "";
+    var line2;
+    if (first) {
+      line2 = "<br/>- welcome to the board!";
+    } else {
+      line2 = "<br/>- " + diff;
+      if (faster) {
+        line2 += " second improvement";
+      } else {
+        line2 += " seconds off pace";
+      }
+    }
+
+    var line3 = "";
     var lapTimes = getLapTimes();
+    var self = false;
     lapTimes.forEach(function (lapTime) {
-      if (timeMs < lapTime.timeMs && driver !== lapTime.driver && !message2) {
-        message2 = ", beating " + lapTime.driver + " by " + secondsDiff(lapTime.timeMs, timeMs) + " seconds!";
+      if (driver == lapTime.driver) self = true;
+      if (!self && timeMs < lapTime.timeMs && !line3) {
+        line3 = "<br/>- overtakes " + lapTime.driver + " by " + secondsDiff(lapTime.timeMs, timeMs) + " seconds";
       }
     });
-    message2 = message2 || ".";
-
-    var message3 = personalBest ? faster ? " Nice work! That's a " + diff + " second improvement!" : close ? " Not too shabby." : " Better luck next time." : "";
 
     var overallBest = LapTimes.findOne({leaderboard_id: leaderboard}, {sort: {time: 1}});
     var overallBestMs = overallBest ? overallBest.time : 9999999;
-    var message4 = timeMs < overallBestMs ? " And it's also a new all-time record!" : "";
+    var line4 = "";
+    if (timeMs < overallBestMs) {
+      line4 = "<br/>- new lap record";
+    }
+
+    var message = line1 + line2;
+    if (line3) message += line3;
+    if (line4) message += line4;
 
     var xhttp = new XMLHttpRequest();
-    xhttp.open("POST", "https://api.hipchat.com/v2/room/Racing/notification?auth_token=Mk8MPiX1IuDD9ujFlIWkN2F12dXHflpIR1Nx1Koj", true);
+    xhttp.open("POST", "https://api.hipchat.com/v2/room/987028/notification?auth_token=Mk8MPiX1IuDD9ujFlIWkN2F12dXHflpIR1Nx1Koj", true);
     xhttp.setRequestHeader("Content-type", "application/json");
     xhttp.send(JSON.stringify({
       "color": color,
-      "message": message1 + message2 + message3 + message4,
-      "notify": true,
-      "message_format": "text"
+      "message": message,
+      "notify": true
     }));
   }
 }
