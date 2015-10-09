@@ -160,7 +160,7 @@ if (Meteor.isClient) {
     if (line4) message += line4;
 
     var xhttp = new XMLHttpRequest();
-    xhttp.open("POST", "https://api.hipchat.com/v2/room/987028/notification?auth_token=Mk8MPiX1IuDD9ujFlIWkN2F12dXHflpIR1Nx1Koj", true);
+    xhttp.open("POST", "https://api.hipchat.com/v2/room/1938262/notification?auth_token=Mk8MPiX1IuDD9ujFlIWkN2F12dXHflpIR1Nx1Koj", true);
     xhttp.setRequestHeader("Content-type", "application/json");
     xhttp.send(JSON.stringify({
       "color": color,
