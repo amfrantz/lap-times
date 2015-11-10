@@ -8,7 +8,6 @@ body {
 }
 
 .header {
-	height: 40px;
 	padding: 0 20px 0 0;
 	position: relative;
 }
@@ -158,5 +157,14 @@ body {
 	right: 0;
 }
 
-
-
+@media all and (max-width: 768px) {
+	.header {
+		padding: 0;
+	}
+	.add-time {
+		padding-left: 0;
+	}
+	.add-time input.mui-form-control {
+	    width: 90px;
+	}
+}

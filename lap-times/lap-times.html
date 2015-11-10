@@ -4,6 +4,7 @@
   <link href="//cdn.muicss.com/mui-0.1.23/css/mui.min.css" rel="stylesheet" type="text/css" />
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
   <script src="//cdn.muicss.com/mui-0.1.23/js/mui.min.js"></script>
+  <meta name="viewport" content="width=device-width">
 </head>
 
 <body>
@@ -18,13 +19,13 @@
                 {{/each}}
             </ul>
         </div>
-        
+
         {{#unless isViewOnly}}
             <div class="user-controls">
                 {{> loginButtons}}
             </div>
         {{/unless}}
-        
+
         <div class="add-time">
             {{#if currentUser}}
                 <form class="new-time mui-form-inline">
@@ -38,7 +39,7 @@
 
         <h1 class="leaderBoard-title">
             {{#with leaderboard}}
-                <span class="leaderBoard-title-car">{{car}}</span>
+                <span class="leaderBoard-title-car"> {{car}}</span>
                 <span class="leaderBoard-title-divider">//</span>
                 <span class="leaderBoard-title-track">{{track}}</span>
             {{/with }}
