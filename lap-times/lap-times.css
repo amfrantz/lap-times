@@ -1,16 +1,17 @@
 html {
 	font-size: 62.5%;
+	height: 100%;
 }
 
 body {
 	font-size: 1.4rem;
+	height: 100%;
 	padding: 0;
 }
 
 .header {
 	height: 40px;
 	padding: 0 20px 0 0;
-	position: relative;
 }
 
 .container {
@@ -20,19 +21,23 @@ body {
 }
 
 .user-controls {
-	float: right;
-	padding-top: 10px;
+	bottom: 2px;
+	position: absolute;
+	right: 2px;
 }
 
 .add-time {
 	margin-left: 63px;
-	max-width: 500px;
-	min-width: 380px;
-	padding-left: 65px;
+	max-width: 350px;
+}
+
+.add-time .new-time {
+	display: flex;
 }
 
 .add-time input.mui-form-control {
     display: inline-block;
+    flex: 1;
     vertical-align: middle;
     width: auto;
 }
@@ -42,8 +47,11 @@ body {
 }
 
 #login-dropdown-list {
-	left: auto;
-	right: -1px;
+	bottom: 0;
+	right: 0;
+	top: auto;
+    left: auto;
+    margin: 0;
 }
 
 #login-buttons a.login-link-text {
@@ -112,20 +120,17 @@ body {
 .leaderBoard {
 	counter-reset: times-counter;
 	margin-top: 0px;
-	max-width: 500px;
-    min-width: 380px;
 }
 
 .leaderBoard dt {
-	font-size: 2.8rem;
+	font-size: 2.2rem;
+	margin-bottom: 20px;
 	position: relative;
-	height: 38px;
 }
 
 .leaderBoard dt:first-child {
-	font-size: 3.8rem;
+	font-size: 3rem;
 	font-weight: 500;
-	height: 50px;
 }
 
 .leaderBoard dt:before {
@@ -133,7 +138,6 @@ body {
 	content: counter(times-counter, decimal-leading-zero);
 	counter-increment: times-counter;
 	font-weight: 100;
-	margin-right: 15px;
 	text-align: right;
     display: inline-block;
     width: 40px;
@@ -146,17 +150,82 @@ body {
 
 .leaderBoard-driver {
 	font-weight: 600;
-	padding-right: 80px;
 }
 
 .leaderBoard-time {
 	color: gray;
-	font-size: 2.4rem;
+	display: block;
+	font-size: 2rem;
 	font-weight: 200;
-	position: absolute;
-	bottom: 0;
-	right: 0;
+	padding-left: 50px;
 }
 
 
+@media screen and (min-width: 768px) {
 
+	html, body {
+		height: auto;
+	}
+
+	.add-time {
+		max-width: 500px;
+		min-width: 380px;
+		padding-left: 65px;
+	}
+
+	.add-time .new-time {
+		display: block;
+	}
+
+	.add-time input.mui-form-control {
+	    flex: initial;
+	}
+
+	.user-controls {
+		bottom: 0;
+		float: right;
+		padding-top: 10px;
+		position: relative;
+		right: 0;
+	}
+
+	#login-dropdown-list {
+		bottom: auto;
+		left: auto;
+		top: 1px;
+		right: -1px;
+	}
+
+	.leaderBoard {
+		max-width: 500px;
+    	min-width: 380px;
+	}
+
+	.leaderBoard dt {
+		font-size: 2.8rem;
+		height: 38px;
+		margin-bottom: 0;
+	}
+
+	.leaderBoard dt:first-child {
+		font-size: 3.8rem;
+		height: 50px;
+	}
+
+	.leaderBoard-driver {
+		padding-right: 80px;
+	}
+
+	.leaderBoard-time {
+		bottom: 0;
+		font-size: 2.4rem;
+		padding-left: 0;
+		position: absolute;
+		right: 0;
+	}
+
+	.leaderBoard dt:before {
+		margin-right: 15px;
+	}
+
+}
