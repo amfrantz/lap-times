@@ -29,7 +29,7 @@ if (Meteor.isClient) {
 
       var leaderboard = Session.get("leaderboard");
       var time = event.target.time.value;
-      if (/^[0-9]?[0-9]:[0-5][0-9]\.[0-9]$/.test(time)) {
+      if (/^[0-9]?[0-9]:[0-5][0-9]\.[0-9][0-9]?[0-9]?$/.test(time)) {
         var timeMs = timeToMs(time);
 
         notifyHipChat(leaderboard, time, timeMs);
@@ -47,7 +47,7 @@ if (Meteor.isClient) {
         // localStorage.removeItem('Meteor.loginToken');
 
       } else {
-        alert ('Nice try. Lap times must be formatted as follows: 00:00.0');
+        alert ('Nice try. Lap times must be formatted as follows: 00:00.0 up to 3 decimals places.');
       }
     },
     "click .leaderboard": function (event) {
@@ -96,15 +96,17 @@ if (Meteor.isClient) {
     var seconds = Number(time.split(':')[1].split('.')[0]);
     var ms = Number(time.split('.')[1]);
 
-    return (minutes * 60 * 1000) + (seconds * 1000) + (ms * 100);
+    return (minutes * 60 * 1000) + (seconds * 1000) + ms;
   }
 
   function msToTime(ms) {
-    var milliseconds = parseInt((ms % 1000) / 100);
+    var milliseconds = parseInt((ms % 1000)) + '';
     var seconds = parseInt((ms / 1000) % 60);
     var minutes = parseInt((ms / (1000 * 60)) % 60);
 
-    minutes = (minutes < 10) ? "0" + minutes : minutes;
+    // fill in leading zeros
+    while (milliseconds.length < 3) milliseconds = '0' + milliseconds;
+
     seconds = (seconds < 10) ? "0" + seconds : seconds;
 
     return minutes + ":" + seconds + "." + milliseconds;

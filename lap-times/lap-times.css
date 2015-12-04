@@ -129,7 +129,7 @@ body {
 }
 
 .leaderBoard dt:first-child {
-	font-size: 3rem;
+	font-size: 3.2rem;
 	font-weight: 500;
 }
 
@@ -157,6 +157,7 @@ body {
 	display: block;
 	font-size: 2rem;
 	font-weight: 200;
+	margin-top: -6px;
 	padding-left: 50px;
 }
 
@@ -226,6 +227,10 @@ body {
 
 	.leaderBoard dt:before {
 		margin-right: 15px;
+	}
+
+	.leaderBoard-time {
+		margin-top: 0;
 	}
 
 }
